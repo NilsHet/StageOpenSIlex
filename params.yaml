@@ -1,0 +1,17 @@
+---
+credentials:
+  identifier: "admin@opensilex.org"
+  password: "admin"
+  host: "http://localhost:8666/rest"
+dir_path: "./data/Test_Images"
+file_path: "./data/test.csv"
+file_path2: "./data/nomenclatureTest.xlsx"
+columns_mapping:
+  file_ext: "png"
+  file: "NomImage"
+  rdf_type: "Rdf-type"
+  provenance: 
+    uri: "Provenance"
+  target: "Target"
+  date: "Date"
+  metadata: "Metadata"
