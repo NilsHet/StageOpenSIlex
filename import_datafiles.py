@@ -57,42 +57,6 @@ def get_scientific_object_name(rang, colonne, scientific_objects_api):
         print(traceback.format_exc())
         return None
 
-def sendImage(image_path, scientific_object, data_api):
-    try:
-        description = {
-            'scientificObject': scientific_object,
-            'rdfType': 'vocabulary:RGBImage',
-            'provenance': 'dev:provenance/standard_provenance',
-            'date': datetime.now().isoformat(),
-            'file': os.path.basename(image_path),
-            'metadata': {
-                'source': 'image_import_script'
-            }
-        }
-        
-        # Print the description to verify the content
-        print("Description being sent to API:", json.dumps(description, indent=2))
-        
-        # Debugging: Check if the image file exists
-        if not os.path.isfile(image_path):
-            print(f"Error: File {image_path} does not exist.")
-            return None
-        
-        # Print the file path being sent
-        print(f"Sending file: {image_path}")
-        
-        result = data_api.post_data_file(
-            description=json.dumps(description),
-            file=image_path
-        )["result"]
-        
-        print(f"Successfully sent image {image_path} for object {scientific_object}")
-        return result
-    except Exception as e:
-        print(f"Failed to send image {image_path} for object {scientific_object}")
-        print(traceback.format_exc())
-        return None
-
 def importImages(base_folder, data_api, scientific_objects_api):
     images = get_images_in_folders(base_folder)
     results = []
@@ -101,22 +65,42 @@ def importImages(base_folder, data_api, scientific_objects_api):
             rang, colonne = extract_rang_colonne(folder_name)
             scientific_object_uri = get_scientific_object_name(rang, colonne, scientific_objects_api)
             if scientific_object_uri:
-                result = sendImage(image_path, scientific_object_uri, data_api)
-                if result:
-                    results.append(result)
-                else:
-                    print(f"Failed to send image {image_path} for scientific object {scientific_object_uri}")
+                # Construct description
+                
+                filename = os.path.basename(image_path)
+                description = {
+                    "target": scientific_object_uri,
+                    "rdf_type": "vocabulary:RGBImage",
+                    "provenance": {"uri": "dev:provenance/standard_provenance"},
+                    "date": "2024-06-20T12:30:00Z",
+                    "file": image_path
+                }
+                
+                # Print the description to verify the content
+                print("Description being sent to API:", json.dumps(description, indent=2))
+                
+                # Debugging: Check if the image file exists
+                if not os.path.isfile(image_path):
+                    print(f"Error: File {image_path} does not exist.")
+                    continue
+                
+                # Print the file path being sent
+                print(f"Sending file: {image_path}")
+                
+                result = data_api.post_data_file(
+                    description=json.dumps(description),
+                    file=image_path
+                )["result"]
+                
+                print(f"Successfully sent image {image_path} for object {scientific_object_uri}")
+                results.append(result)
             else:
                 print(f"No scientific object found for folder {folder_name}")
         except Exception as e:
             print(f"Error processing folder {folder_name}: {e}")
             print(traceback.format_exc())
+    
     print(results)
-
-
-
-
-
 
 base_folder = "/home/u108-s786/HetuinNils/Data/NilsData/Literal/Acquisition/Extraction/2023-04-26/side_1/rgb_images"
 importImages(base_folder, data_api, scientific_objects_api)
