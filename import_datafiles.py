@@ -17,6 +17,22 @@ pythonClient.connect_to_opensilex_ws(**params["credentials"])
 data_api = osCP.DataApi(pythonClient)
 scientific_objects_api = osCP.ScientificObjectsApi(pythonClient)
 
+dico_provenance = {
+    "side_1/camera_1_1": "dev:id/provenance/camera1_centre_est",
+    "side_1/camera_1_2": "dev:id/provenance/camera1_gauche_est",
+    "side_1/camera_1_3": "dev:id/provenance/camera1_droite_est",
+    "side_1/camera_2_1": "dev:id/provenance/camera2_centre_est",
+    "side_1/camera_2_2": "dev:id/provenance/camera2_gauche_est",
+    "side_1/camera_2_3": "dev:id/provenance/camera2_droite_est",
+    "side_2/camera_1_1": "dev:id/provenance/camera1_centre_ouest",
+    "side_2/camera_1_2": "dev:id/provenance/camera1_gauche_ouest",
+    "side_2/camera_1_3": "dev:id/provenance/camera1_droite_ouest",
+    "side_2/camera_2_1": "dev:id/provenance/camera2_centre_ouest",
+    "side_2/camera_2_2": "dev:id/provenance/camera2_gauche_ouest",
+    "side_2/camera_2_3": "dev:id/provenance/camera2_droite_ouest"
+}
+
+
 def get_images_in_folders(base_folder):
     if not os.path.exists(base_folder):
         print(f"Error: The base folder '{base_folder}' does not exist.")
@@ -57,6 +73,29 @@ def get_scientific_object_name(rang, colonne, scientific_objects_api):
         print(traceback.format_exc())
         return None
 
+
+def get_side_from_path(image_path):
+    parts = os.path.normpath(image_path).split(os.sep)
+    for part in parts:
+        if part.startswith('side_'):
+            return part
+    return None
+
+
+def get_provenance_from_path(image_path):
+
+    key_side = get_side_from_path(image_path)
+    if key_side is None:
+        return None
+    
+    image_name = os.path.splitext(os.path.basename(image_path))[0]
+    key = f"{key_side}/{image_name}"
+    
+    return dico_provenance.get(key, None)
+
+
+
+
 def importImages(base_folder, data_api, scientific_objects_api):
     images = get_images_in_folders(base_folder)
     results = []
@@ -67,11 +106,12 @@ def importImages(base_folder, data_api, scientific_objects_api):
             if scientific_object_uri:
                 # Construct description
                 
-                filename = os.path.basename(image_path)
+                provenance = get_provenance_from_path(image_path)
+
                 description = {
                     "target": scientific_object_uri,
                     "rdf_type": "vocabulary:RGBImage",
-                    "provenance": {"uri": "dev:provenance/standard_provenance"},
+                    "provenance": {"uri": provenance},
                     "date": "2024-06-20T12:30:00Z",
                     "file": image_path
                 }
