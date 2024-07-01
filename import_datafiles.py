@@ -94,7 +94,15 @@ def get_provenance_from_path(image_path):
     return dico_provenance.get(key, None)
 
 
+def get_date_from_path(image_path):
+    parts = os.path.normpath(image_path).split(os.sep)
 
+    for i, part in enumerate(parts):
+        if part == 'Extraction' and i + 1 < len(parts):
+            date_part = parts[i + 1]
+            if re.match(r'\d{4}-\d{2}-\d{2}', date_part):
+                return f"{date_part}T00:00:00Z"
+    return None
 
 def importImages(base_folder, data_api, scientific_objects_api):
     images = get_images_in_folders(base_folder)
@@ -104,15 +112,18 @@ def importImages(base_folder, data_api, scientific_objects_api):
             rang, colonne = extract_rang_colonne(folder_name)
             scientific_object_uri = get_scientific_object_name(rang, colonne, scientific_objects_api)
             if scientific_object_uri:
-                # Construct description
-                
+
+                #get a different provenance for each image to avoid the duplicate data
                 provenance = get_provenance_from_path(image_path)
 
+                date = get_date_from_path(image_path)
+
+                # Construct description  
                 description = {
                     "target": scientific_object_uri,
                     "rdf_type": "vocabulary:RGBImage",
                     "provenance": {"uri": provenance},
-                    "date": "2024-06-20T12:30:00Z",
+                    "date": date,
                     "file": image_path
                 }
                 
