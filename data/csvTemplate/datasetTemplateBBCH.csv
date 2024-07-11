@@ -1,0 +1,4 @@
+target,Date,http://opensilex.dev/id/variable/plant_bbch54pomefruit_visualobservation_unitless,http://opensilex.dev/id/variable/plant_bbch59pomefruit_visualobservation_unitless,http://opensilex.dev/id/variable/plant_bbch65pomefruit_visualobservation_unitless,http://opensilex.dev/id/variable/plant_bbch67pomefruit_visualobservation_unitless
+Target (ex: scientific object) name or URI ,Acquisition date of the data (format: AAAA-MM-DDTHH:mm:ssZ or AAAA-MM-DD),Plant_BBCH54PomeFruit_VisualObservation_unitless,Plant_BBCH67PomeFruit_VisualObservation_unitless,Plant_BBCH65PomeFruit_VisualObservation_unitless,Plant_BBCH59PomeFruit_VisualObservation_unitless
+Column data type: Short string,"Date
+Required : yes",Column data type: Date (format: YYYY-MM-DD),Column data type: Date (format: YYYY-MM-DD),Column data type: Date (format: YYYY-MM-DD),Column data type: Date (format: YYYY-MM-DD)

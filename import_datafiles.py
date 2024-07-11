@@ -153,5 +153,6 @@ def importImages(base_folder, data_api, scientific_objects_api):
     
     print(results)
 
+# Usage
 base_folder = "/home/u108-s786/HetuinNils/Data/NilsData/Literal/Acquisition/Extraction/2023-04-26/side_1/rgb_images"
 importImages(base_folder, data_api, scientific_objects_api)

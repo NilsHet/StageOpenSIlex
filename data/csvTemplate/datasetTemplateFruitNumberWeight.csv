@@ -1,0 +1,4 @@
+target,Date,http://opensilex.dev/id/variable/plant_numberoffruits_calculation_unitless,http://opensilex.dev/id/variable/plant_weightharvested_weighing_kilogramme,http://opensilex.dev/id/variable/plant_weight50fruits_weighing_kilogramme
+"Target (ex: scientific object) name or URI ",Acquisition date of the data (format: AAAA-MM-DDTHH:mm:ssZ or AAAA-MM-DD),Plant_NumberOfFruits_Calculation_unitless,"Plant_WeightHarvested_Weighing_Kilogramme ","Plant_Weight50Fruits_Weighing_Kilogramme "
+Column data type: Short string,"Date
+Required : yes",Column data type: Integer number,Column data type: Decimal number,Column data type: Decimal number
